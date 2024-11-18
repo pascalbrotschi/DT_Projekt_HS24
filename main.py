@@ -1,3 +1,5 @@
-import pandas as pd
+def start_func():
+    print("test")
 
-print("Test")
+if __name__ == "__main__":
+    start_func()

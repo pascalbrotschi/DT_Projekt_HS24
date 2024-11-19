@@ -1,6 +1,7 @@
 import streamlit as st
-from ifc_analyzer.ifc_utils import analyze_ifc_file
 from ifc_analyzer.file_handler import save_uploaded_file, delete_file
+from ifc_analyzer.ifc_basequantities import extract_slab_base_quantities_with_psets, extract_wall_base_quantities_with_psets
+from ifc_analyzer.ifc_material import extract_materials_for_all_entities
 import sys
 import os
 
@@ -24,7 +25,7 @@ def start_func():
             # "Start"-Button anzeigen
             if st.button("Analyse starten"):
                 # Anzahl der Wände analysieren
-                wall_count = analyze_ifc_file(file_path)
+                wall_count = (file_path)
 
                 if wall_count is not None:
                     st.write(f"Anzahl der Wände in der IFC-Datei: {wall_count}")

@@ -8,7 +8,7 @@ model = ifcopenshell.open(file_path)
 
 # Funktion zur Extraktion der Materialien für alle IFC-Entitäten
 def extract_materials_for_all_entities(model):
-    entity_materials = []
+    material_data = []
     entities = model.by_type("IfcProduct")  # Alle IFC-Produkt-Entitäten
 
     for entity in entities:
@@ -33,18 +33,16 @@ def extract_materials_for_all_entities(model):
                         )
 
         # Füge Entität und Materialinformation der Liste hinzu
-        entity_materials.append({
+        material_data.append({
             "EntityGlobalId": entity.GlobalId,
             "EntityType": entity.is_a(),
             "Material": material_info
         })
 
-    return entity_materials
+    return material_data
 
 # Extrahiere die Materialien für alle Entitäten
 materials = extract_materials_for_all_entities(model)
-
-print(materials)
 
 # Ergebnisse in einer Tabelle anzeigen
 df = pd.DataFrame(materials)

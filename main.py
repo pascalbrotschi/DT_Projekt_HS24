@@ -1,16 +1,16 @@
 import streamlit as st
+import ifcopenshell
+import pandas as pd
+from io import BytesIO
 from ifc_analyzer.file_handler import save_uploaded_file, delete_file
 from ifc_analyzer.ifc_basequantities import extract_slab_base_quantities_with_psets, extract_wall_base_quantities_with_psets
 from ifc_analyzer.ifc_material import extract_materials_for_all_entities
-import sys
-import os
-
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from ifc_analyzer.ifc_merge import merge_wall_slab_materials
 
 # Streamlit-UI
-def start_func():
+def main():
     st.title("IFC-Datei Hochladen und Auswerten")
-    st.write("Lade eine IFC-Datei hoch, um die Anzahl der Wände auszulesen.")
+    st.write("Lade eine IFC-Datei hoch, um die Daten zu analysieren.")
 
     # Datei-Upload
     uploaded_file = st.file_uploader("Wähle eine IFC-Datei aus", type=["ifc"])
@@ -24,12 +24,44 @@ def start_func():
 
             # "Start"-Button anzeigen
             if st.button("Analyse starten"):
-                # Anzahl der Wände analysieren
-                wall_count = (file_path)
+                # IFC-Modell laden
+                try:
+                    model = ifcopenshell.open(file_path)
+                except Exception as e:
+                    st.error(f"Fehler beim Öffnen der IFC-Datei: {e}")
+                    return
 
-                if wall_count is not None:
-                    st.write(f"Anzahl der Wände in der IFC-Datei: {wall_count}")
+                # Daten analysieren
+                try:
+                    st.info("Analysiere Wände, Decken und Materialien...")
+                    wall_data = extract_wall_base_quantities_with_psets(model)
+                    slab_data = extract_slab_base_quantities_with_psets(model)
+                    material_data = extract_materials_for_all_entities(model)
 
+                    # Ergebnisse zusammenführen
+                    final_table = merge_wall_slab_materials(wall_data, slab_data, material_data)
+
+                    # Tabelle als Excel speichern in BytesIO
+                    output_buffer = BytesIO()
+                    with pd.ExcelWriter(output_buffer, engine="openpyxl") as writer:
+                        final_table.to_excel(writer, index=False, sheet_name="Analysis")
+                    output_buffer.seek(0)
+
+                    # Ergebnisse anzeigen
+                    st.success("Analyse abgeschlossen! Du kannst die Excel-Datei herunterladen.")
+                    st.dataframe(final_table)
+
+                    # Download-Button für die Excel-Datei
+                    st.download_button(
+                        label="📥 Excel-Datei herunterladen",
+                        data=output_buffer,
+                        file_name="analysis_results.xlsx",
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    )
+
+                except Exception as e:
+                    st.error(f"Fehler bei der Analyse: {e}")
+                
                 # Datei löschen
                 delete_file(file_path)
                 st.info("Die hochgeladene Datei wurde nach der Analyse gelöscht.")
@@ -37,4 +69,5 @@ def start_func():
             st.error("Fehler beim Speichern der Datei.")
 
 if __name__ == "__main__":
-    start_func()
+    main()
+

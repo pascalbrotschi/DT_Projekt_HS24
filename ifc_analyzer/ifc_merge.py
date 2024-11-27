@@ -59,10 +59,10 @@ slab_data = extract_slab_base_quantities_with_psets(model)
 material_data = extract_materials_for_all_entities(model)
 
 # Merge durchführen
-final_table = merge_wall_slab_materials(wall_data, slab_data, material_data)
+IFC_Auszug_MAT = merge_wall_slab_materials(wall_data, slab_data, material_data)
 
 # Speichere die Tabelle als Excel-Datei mit Pandas
-output_file = r"C:\Users\pasca\OneDrive - Hochschule Luzern\Programmieren\DT_Projekt_HS24\final_table.xlsx"
-final_table.to_excel(output_file, index=False)
+output_file = r"C:\Users\pasca\OneDrive - Hochschule Luzern\Programmieren\DT_Projekt_HS24\IFC_Auszug_MAT.xlsx"
+IFC_Auszug_MAT.to_excel(output_file, index=False)
 
 print(f"Die Tabelle wurde erfolgreich als Excel-Datei gespeichert: {output_file}")

@@ -8,11 +8,11 @@ from ifc_analyzer.ifc_basequantities import extract_slab_base_quantities_with_ps
 from ifc_analyzer.ifc_material import extract_materials_for_all_entities
 from ifc_analyzer.ifc_merge import merge_wall_slab_materials
 from ifc_Config.Config import enrich_ifc_data
+from ifc_Berechnungen.Berechnungen import Berechnung_GE_THG
 
-# Streamlit-UI
 def main():
     st.title("IFC-Datei Hochladen und Auswerten")
-    st.write("Lade eine IFC-Datei hoch, um die Daten zu analysieren und mit KBOB-Werten zu erweitern.")
+    st.write("Lade eine IFC-Datei hoch, um die Daten zu analysieren und mit berechneten Werten zu erweitern.")
 
     # Datei-Upload
     uploaded_file = st.file_uploader("Wähle eine IFC-Datei aus", type=["ifc"])
@@ -43,6 +43,7 @@ def main():
                     # Temporäre Pfade für die Zwischen- und Ergebnisdateien
                     temp_ifc_path = "IFC_Auszug_MAT.xlsx"
                     enriched_output_path = "IFC_MAT_Config.xlsx"
+                    final_output_path = "IFC_MAT_Config_with_GE_THG.xlsx"
 
                     # Tabelle IFC_Auszug_MAT speichern
                     with pd.ExcelWriter(temp_ifc_path, engine="openpyxl") as writer:
@@ -61,17 +62,21 @@ def main():
                         output_file_path=enriched_output_path
                     )
 
+                    # Berechnungen für GE und THG durchführen
+                    st.info("Berechne zusätzliche Werte für Graue Energie und Treibhausgasemissionen...")
+                    Berechnung_GE_THG(enriched_output_path, final_output_path)
+
                     # Ergebnisdatei laden und anzeigen
-                    enriched_data = pd.read_excel(enriched_output_path)
-                    st.success("Konfiguration abgeschlossen! Die Tabelle ist bereit.")
+                    enriched_data = pd.read_excel(final_output_path)
+                    st.success("Analyse abgeschlossen! Die Tabelle ist bereit.")
                     st.dataframe(enriched_data)
 
                     # Download-Button für die angereicherte Tabelle
-                    with open(enriched_output_path, "rb") as f:
+                    with open(final_output_path, "rb") as f:
                         st.download_button(
-                            label="📥 Konfigurierte Tabelle herunterladen",
+                            label="📥 Tabelle mit berechneten Werten herunterladen",
                             data=f,
-                            file_name="IFC_MAT_Config.xlsx",
+                            file_name="IFC_MAT_Config_with_GE_THG.xlsx",
                             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                         )
 
@@ -80,10 +85,10 @@ def main():
 
                 finally:
                     # Temporäre Dateien löschen
-                    for temp_file in [temp_ifc_path, enriched_output_path]:
+                    for temp_file in [temp_ifc_path, enriched_output_path, final_output_path]:
                         if os.path.exists(temp_file):
                             os.remove(temp_file)
-                
+
                 # Datei löschen
                 delete_file(file_path)
                 st.info("Die hochgeladene Datei wurde nach der Analyse gelöscht.")
@@ -92,4 +97,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

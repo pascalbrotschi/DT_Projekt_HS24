@@ -1,16 +1,14 @@
-import ifcopenshell
-import ifcopenshell.util.element
 import pandas as pd
-from .ifc_basequantities import extract_slab_base_quantities_with_psets, extract_wall_base_quantities_with_psets
-from .ifc_material import extract_materials_for_all_entities
 
-def merge_wall_slab_materials(wall_data, slab_data, material_data):
+def merge_basequantities_materials(wall_data, slab_data, column_data, beam_data, material_data):
     """
-    Merged die Daten von Wänden, Decken und Materialien basierend auf ihren GlobalIds.
+    Merged die Daten von Wänden, Decken, Stützen, Trägern und Materialien basierend auf ihren GlobalIds.
 
     Args:
         wall_data (list of dict): BaseQuantities der Wände (von extract_wall_base_quantities_with_psets).
         slab_data (list of dict): BaseQuantities der Decken (von extract_slab_base_quantities_with_psets).
+        column_data (list of dict): BaseQuantities der Stützen (von extract_column_base_quantities_with_psets).
+        beam_data (list of dict): BaseQuantities der Trägern (von extract_beam_base_quantities_with_psets).
         material_data (list of dict): Materialien aller Entitäten (von extract_materials_for_all_entities).
 
     Returns:
@@ -24,6 +22,12 @@ def merge_wall_slab_materials(wall_data, slab_data, material_data):
     df_slabs = pd.DataFrame(slab_data)
     df_slabs.rename(columns={"SlabGlobalId": "GlobalId"}, inplace=True)
 
+    df_columns = pd.DataFrame(column_data)
+    df_columns.rename(columns={"ColumnGlobalId": "GlobaldId"}, inplace=True)
+
+    df_beams = pd.DataFrame(beam_data)
+    df_beams.rename(columns={"BeamGlobalId": "GlobaldId"}, inplace=True)
+
     # Materialien zu DataFrame konvertieren
     df_materials = pd.DataFrame(material_data)
     df_materials.rename(columns={"EntityGlobalId": "GlobalId"}, inplace=True)
@@ -34,8 +38,12 @@ def merge_wall_slab_materials(wall_data, slab_data, material_data):
     # Decken und Materialien kombinieren
     merged_slabs = pd.merge(df_slabs, df_materials, on="GlobalId", how="left")
 
-    # Beide Tabellen zusammenfügen
-    final_df = pd.concat([merged_walls, merged_slabs], ignore_index=True)
+    merged_columns = pd.merge(df_columns, df_materials, on="GlobalId", how="left")
+
+    merged_beams = pd.merge(df_beams, df_materials, on="GlobalId", how="left")
+
+    # Alle Tabellen zusammenfügen
+    final_df = pd.concat([merged_walls, merged_slabs, merged_columns, merged_beams], ignore_index=True)
 
     # Neue Spalte für Bauteilfläche erstellen
     final_df["Bauteilfläche"] = final_df["NetArea"].combine_first(final_df["NetSideArea"])
@@ -48,21 +56,3 @@ def merge_wall_slab_materials(wall_data, slab_data, material_data):
     final_df = final_df[columns]
 
     return final_df
-
-# Beispiel
-file_path = r"C:\Users\pasca\OneDrive - Hochschule Luzern\Programmieren\DT_Projekt_HS24\Decke_Wand.ifc"
-model = ifcopenshell.open(file_path)
-
-# Extrahiere Daten
-wall_data = extract_wall_base_quantities_with_psets(model)
-slab_data = extract_slab_base_quantities_with_psets(model)
-material_data = extract_materials_for_all_entities(model)
-
-# Merge durchführen
-IFC_Auszug_MAT = merge_wall_slab_materials(wall_data, slab_data, material_data)
-
-# Speichere die Tabelle als Excel-Datei mit Pandas
-output_file = r"C:\Users\pasca\OneDrive - Hochschule Luzern\Programmieren\DT_Projekt_HS24\IFC_Auszug_MAT.xlsx"
-IFC_Auszug_MAT.to_excel(output_file, index=False)
-
-print(f"Die Tabelle wurde erfolgreich als Excel-Datei gespeichert: {output_file}")

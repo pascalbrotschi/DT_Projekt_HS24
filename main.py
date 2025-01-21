@@ -4,9 +4,9 @@ import ifcopenshell
 import pandas as pd
 from io import BytesIO
 from ifc_analyzer.file_handler import save_uploaded_file, delete_file
-from ifc_analyzer.ifc_basequantities import extract_slab_base_quantities_with_psets, extract_wall_base_quantities_with_psets
+from ifc_analyzer.ifc_basequantities import extract_slab_base_quantities_with_psets, extract_wall_base_quantities_with_psets, extract_column_base_quantities_with_psets, extract_beam_base_quantities_with_psets
 from ifc_analyzer.ifc_material import extract_materials_for_all_entities
-from ifc_analyzer.ifc_merge import merge_wall_slab_materials
+from ifc_analyzer.ifc_merge import merge_basequantities_materials
 from ifc_Config.Config import enrich_ifc_data
 from ifc_Berechnungen.Berechnungen import Berechnung_GE_THG
 from ifc_Berechnungen.Totalwerte import add_totals_and_group_by_material
@@ -35,10 +35,12 @@ def main():
                     # Daten analysieren
                     wall_data = extract_wall_base_quantities_with_psets(model)
                     slab_data = extract_slab_base_quantities_with_psets(model)
+                    column_data = extract_column_base_quantities_with_psets(model)
+                    beam_data = extract_beam_base_quantities_with_psets(model)
                     material_data = extract_materials_for_all_entities(model)
 
                     # Ergebnisse zusammenführen
-                    IFC_Auszug_MAT = merge_wall_slab_materials(wall_data, slab_data, material_data)
+                    IFC_Auszug_MAT = merge_basequantities_materials(wall_data, slab_data, column_data, beam_data, material_data)
 
                     # Temporäre Pfade für die Zwischen- und Ergebnisdateien
                     temp_ifc_path = "IFC_Auszug_MAT.xlsx"

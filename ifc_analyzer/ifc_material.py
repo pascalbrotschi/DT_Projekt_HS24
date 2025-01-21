@@ -3,7 +3,7 @@ import ifcopenshell.util.element
 import pandas as pd
 
 # Öffne die IFC-Datei
-file_path = r"C:\Users\pasca\OneDrive - Hochschule Luzern\Programmieren\DT_Projekt_HS24\Decke_Wand.ifc"
+file_path = r"C:\Users\pasca\OneDrive - Hochschule Luzern\Programmieren\DT_Projekt_HS24\ARC_Box_MEP.ifc"
 model = ifcopenshell.open(file_path)
 
 # Funktion zur Extraktion der Materialien für alle IFC-Entitäten

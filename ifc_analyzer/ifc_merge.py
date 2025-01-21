@@ -23,10 +23,10 @@ def merge_basequantities_materials(wall_data, slab_data, column_data, beam_data,
     df_slabs.rename(columns={"SlabGlobalId": "GlobalId"}, inplace=True)
 
     df_columns = pd.DataFrame(column_data)
-    df_columns.rename(columns={"ColumnGlobalId": "GlobaldId"}, inplace=True)
+    df_columns.rename(columns={"ColumnGlobalId": "GlobalId"}, inplace=True)
 
     df_beams = pd.DataFrame(beam_data)
-    df_beams.rename(columns={"BeamGlobalId": "GlobaldId"}, inplace=True)
+    df_beams.rename(columns={"BeamGlobalId": "GlobalId"}, inplace=True)
 
     # Materialien zu DataFrame konvertieren
     df_materials = pd.DataFrame(material_data)

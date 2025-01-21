@@ -57,12 +57,3 @@ def enrich_ifc_data(config_file_path, kbob_file_path, ifc_file_path, output_file
     # Speichern der angereicherten Daten in einer neuen Excel-Datei
     final_ifc_data.to_excel(output_file_path, index=False)
 
-
-# Beispielaufruf der Funktion
-enrich_ifc_data(
-    config_file_path=r"C:\Users\pasca\OneDrive - Hochschule Luzern\Programmieren\DT_Projekt_HS24\Material_Config.xlsx",
-    kbob_file_path=r"C:\Users\pasca\OneDrive - Hochschule Luzern\Programmieren\DT_Projekt_HS24\GE_THG_MAT.xlsx",
-    ifc_file_path=r"C:\Users\pasca\OneDrive - Hochschule Luzern\Programmieren\DT_Projekt_HS24\IFC_Auszug_MAT.xlsx",
-    output_file_path=r"C:\Users\pasca\OneDrive - Hochschule Luzern\Programmieren\DT_Projekt_HS24\IFC_MAT_Config.xlsx"
-)
-

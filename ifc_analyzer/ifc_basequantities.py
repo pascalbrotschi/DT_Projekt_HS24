@@ -3,7 +3,7 @@ import ifcopenshell.util.element
 import pandas as pd
 
 # Öffne die IFC-Datei
-file_path = r"C:\Users\pasca\OneDrive - Hochschule Luzern\Programmieren\DT_Projekt_HS24\Decke_Wand.ifc"
+file_path = r"C:\Users\pasca\OneDrive - Hochschule Luzern\Programmieren\DT_Projekt_HS24\ARC_Box_MEP.ifc"
 model = ifcopenshell.open(file_path)
 
 # Funktion zur Extraktion der BaseQuantities mit get_psets
@@ -86,6 +86,11 @@ def extract_column_base_quantities_with_psets(model):
         
     return column_data
 
+column_quantities = extract_column_base_quantities_with_psets(model)
+
+columndf = pd.DataFrame(column_quantities)
+print(columndf)
+
 
 def extract_beam_base_quantities_with_psets(model):
     beam_data = []
@@ -114,3 +119,8 @@ def extract_beam_base_quantities_with_psets(model):
         
     return beam_data
 
+
+beam_quantities = extract_beam_base_quantities_with_psets(model)
+
+beamdf = pd.DataFrame(beam_quantities)
+print(beamdf)

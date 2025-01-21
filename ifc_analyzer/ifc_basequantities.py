@@ -57,3 +57,60 @@ slab_quantities = extract_slab_base_quantities_with_psets(model)
 
 slabdf = pd.DataFrame(slab_quantities)
 print(slabdf)
+
+
+def extract_column_base_quantities_with_psets(model):
+    column_data = []
+    columns = model.by_type("IfcColumn")
+
+    for column in columns:
+        psets = ifcopenshell.util.element.get_psets(column)
+
+        if "BaseQuantities" in psets:
+            base_quantities = psets["BaseQuantities"]
+            depth = base_quantities.get("Depth")
+            width = base_quantities.get("Width")
+            length = base_quantities.get("Length")
+
+            # Berechnung der NetArea mit Depth und Length
+            net_area = None
+            if depth is not None and length is not None:
+                net_area = depth * length
+
+            data = {
+                "ColumnGlobalId": column.GlobalId,
+                "Width": width,
+                "NetArea": net_area
+            }
+            column_data.append(data)
+        
+    return column_data
+
+
+def extract_beam_base_quantities_with_psets(model):
+    beam_data = []
+    beams = model.by_type("IfcBeam")
+
+    for beam in beams:
+        psets = ifcopenshell.util.element.get_psets(beam)
+
+        if "BaseQuantities" in psets:
+            base_quantities = psets["BaseQuantities"]
+            depth = base_quantities.get("Depth")
+            width = base_quantities.get("Width")
+            length = base_quantities.get("Length")
+
+            # Berechnung der NetArea mit Depth und Length
+            net_area = None
+            if depth is not None and length is not None:
+                net_area = depth * length
+
+            data = {
+                "BeamGlobalId": beam.GlobalId,
+                "Width": width,
+                "NetArea": net_area
+            }
+            beam_data.append(data)
+        
+    return beam_data
+

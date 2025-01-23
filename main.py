@@ -28,8 +28,10 @@ def provide_file_for_download(file_bytes, download_filename):
     )
 
 def main():
-    st.title("Rohbau | IFC-Ökobilanzierung")
-    st.write("Lade das IFC deines Rohbaumodells hoch, um eine erste Ökobilanzierung deines Projekts zu erhalten.")
+    st.title("Rohbau-IFC | Ökobilanzierung")
+    st.markdown("### Erhalte eine erste Ökobilanzierung deines Projekts.")
+    st.write("Lade das IFC deines Rohbaumodells im untenstehenden Feld hoch.")
+    st.write('<p style="color:orange;">Die folgende Ökobilanzierung wird gemäss der SIA 2032 mit Daten der Tabelle "Ökobilanzdaten im Baubereich" von KBOB durchgeführt. Es werden die graue Energie, sowie die Treibhausgasemissionen berechnet, welche von der Herstellung bis zur Entsorgung entstehen.</p>', unsafe_allow_html=True)
 
     # Datei-Upload
     uploaded_file = st.file_uploader("IFC-Datei hier hochladen", type=["ifc"])

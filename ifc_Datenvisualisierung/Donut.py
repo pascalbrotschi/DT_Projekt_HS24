@@ -35,7 +35,7 @@ def create_interactive_donut_chart(values, labels, total_value, title, unit):
 
     # Layout anpassen
     fig.update_layout(
-        title=dict(text=title, x=0.5, y=0.95, xanchor='center', font=dict(size=20, color="white")),
+        title=dict(text=title, x=0.425, y=0.95, xanchor='center', font=dict(size=20, color="white")),
         showlegend=True,
         margin=dict(t=50, b=50, l=50, r=50),
     )

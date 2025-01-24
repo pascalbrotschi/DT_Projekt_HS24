@@ -78,7 +78,7 @@ def main():
 
                         # Konfigurationsdateien laden
                         config_path = "Material_Config.xlsx"
-                        kbob_path = "GE_THG_MAT.xlsx"
+                        kbob_path = "KBOB.xlsx"
 
                         # Tabelle erweitern mit KBOB-Werten
                         enrich_ifc_data(
@@ -117,7 +117,7 @@ def main():
 
                     # Dropdown zur Auswahl des Diagramms
                     diagram_option = st.selectbox(
-                        "Wählen Sie die Ansicht für das Diagramm:",
+                        "Wählen Sie das gewünschte Diagramm:",
                         [
                             "Graue Energie pro Material",
                             "Treibhausgasemissionen pro Material",

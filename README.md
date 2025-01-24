@@ -19,7 +19,6 @@ Dieses Programm dient dazu, eine Ökobilanzierung für IFC-Dateien (Building Inf
 - Weitere notwendige Bibliotheken (siehe `requirements.txt`):
   - `ifcopenshell`
   - `pandas`
-  - `openpyxl`
   - `plotly`
 
 ### Dateien
